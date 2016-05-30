@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>A Slimey Adventure</title>
+	<style>
+		body {
+			background-color: #E0E0E0;
+		}
+		h1 {
+			font-family: Impact;
+			font-weight: normal;
+			margin: 7px;
+		}
+		td {
+			padding: 3px 7px;
+			border-left: 1px solid black;
+		}
+		td:last-child {
+			border-right: 1px solid black;
+		}
+		.material {
+			position: relative;
+			background: #fff;
+			box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.25), 0 0 2px 0 rgba(0, 0, 0, 0.5);
+			padding: 5px;
+			margin: 15px 0;
+			z-index: 0;
+			border-radius: 2px;
+
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+	</style>
+</head>
+<body>
+	<div style="width:80%;margin:0 auto;max-width:1044px;text-align:center;">
+		<div class="material">
+			<h1>A Slimey Adventure</h1>
+			<div id="gameport" style="margin:0 auto"></div>
+		</div>
+
+		<div class="material">
+			<h1>Instructions</h1>
+
+		</div>
+
+		<div class="material">
+			<h1>Comments</h1>
+			<div id="disqus_thread"></div>
+		</div>
+		
+		<!-- <script>
+			(function() {
+			var d = document, s = d.createElement('script');
+			s.src = 'http://nau-cs413.disqus.com/embed.js';
+			s.setAttribute('data-timestamp', +new Date());
+			(d.head || d.body).appendChild(s);
+			})(); 
+		</script> -->
+	</div>
+
+	<script src ="js/tweenjs.min.js"></script>
+	<script src="js/pixi.js"></script>
+	<script src="js/pixi-audio.js"></script>
+	<script src="js/tileUtilities.js"></script>
+	<script src="js/game.js"></script>
+</body>
+</html>
