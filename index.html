@@ -3,12 +3,17 @@
 <head>
 	<title>A Slimey Adventure</title>
 	<style>
+		@font-face {
+			font-family: Athletic;
+			src: url("fonts/athletic.ttf");
+		}
 		body {
 			background-color: #E0E0E0;
 		}
 		h1 {
-			font-family: Impact;
+			font-family: Athletic;
 			font-weight: normal;
+			font-size: 2.5em;
 			margin: 7px;
 		}
 		td {
@@ -31,6 +36,17 @@
 			-moz-box-sizing: border-box;
 			box-sizing: border-box;
 		}
+		#high-scores {
+			
+		}
+		#high-scores ol {
+			margin: 5px 30px 10px 0;
+			font-size: 1.4em;
+		}
+		#high-scores li {
+			margin-top: 5px;
+			border-bottom: 1px dashed black;
+		}
 	</style>
 </head>
 <body>
@@ -38,6 +54,10 @@
 		<div class="material">
 			<h1>A Slimey Adventure</h1>
 			<div id="gameport" style="margin:0 auto"></div>
+		</div>
+
+		<div id="high-scores" class="material">
+			<h1>Loading High Scores...</h1>
 		</div>
 
 		<div class="material">
@@ -60,11 +80,10 @@
 		</script> -->
 	</div>
 
-	<script src ="js/state-machine.min.js"></script>
-	<script src ="js/tweenjs.min.js"></script>
+	<script src="js/state-machine.min.js"></script>
+	<script src="js/tweenjs.min.js"></script>
 	<script src="js/pixi.js"></script>
 	<script src="js/pixi-audio.js"></script>
-	<script src="js/tileUtilities.js"></script>
 	<script src="js/game.js"></script>
 </body>
 </html>

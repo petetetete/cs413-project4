@@ -188,12 +188,26 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">enemy1.png</key>
+            <key type="filename">close-back.png</key>
+            <key type="filename">distant-back.png</key>
+            <key type="filename">enemies1.png</key>
+            <key type="filename">enemies2.png</key>
+            <key type="filename">ground.png</key>
             <key type="filename">player1.png</key>
+            <key type="filename">player10.png</key>
             <key type="filename">player2.png</key>
             <key type="filename">player3.png</key>
             <key type="filename">player4.png</key>
             <key type="filename">player5.png</key>
+            <key type="filename">player6.png</key>
+            <key type="filename">player7.png</key>
+            <key type="filename">player8.png</key>
+            <key type="filename">player9.png</key>
+            <key type="filename">pointer.png</key>
+            <key type="filename">sky-back.png</key>
+            <key type="filename">test-brown.png</key>
+            <key type="filename">test-green.png</key>
+            <key type="filename">test-red.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -201,12 +215,26 @@
         </map>
         <key>fileList</key>
         <array>
-            <filename>enemy1.png</filename>
             <filename>player1.png</filename>
             <filename>player3.png</filename>
             <filename>player4.png</filename>
             <filename>player5.png</filename>
             <filename>player2.png</filename>
+            <filename>player6.png</filename>
+            <filename>player7.png</filename>
+            <filename>player8.png</filename>
+            <filename>player9.png</filename>
+            <filename>pointer.png</filename>
+            <filename>sky-back.png</filename>
+            <filename>test-brown.png</filename>
+            <filename>test-green.png</filename>
+            <filename>test-red.png</filename>
+            <filename>close-back.png</filename>
+            <filename>distant-back.png</filename>
+            <filename>enemies1.png</filename>
+            <filename>enemies2.png</filename>
+            <filename>ground.png</filename>
+            <filename>player10.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
