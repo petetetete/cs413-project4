@@ -346,7 +346,7 @@
 		sounds.music1.volume = MUSIC_VOLUME;
 		sounds.music2.volume = MUSIC_VOLUME;
 		sounds.music3.volume = MUSIC_VOLUME;
-		sounds.thump.volume = SFX_VOLUME - .2;
+		sounds.thump.volume = SFX_VOLUME - .3;
 		sounds.success.volume = SFX_VOLUME;
 		sounds.defeat.volume = SFX_VOLUME;
 		sounds.countdown1.volume = SFX_VOLUME;
