@@ -5,7 +5,8 @@ $score = $_POST["score"];
 
 if (!(empty($name) && empty($score))) {
 	$str = file_get_contents("scores.json");
-	$newstr = rtrim($str, "]") . ", {\n\t\"name\": \"" . $name . "\",\n\t\"score\": " . $score . "\n}]";
+	$begin = ($str === "" ? "[" : ", ");
+	$newstr = rtrim($str, "]") . $begin . "{\n\t\"name\": \"" . $name . "\",\n\t\"score\": " . $score . "\n}]";
 	echo $newstr;
 	file_put_contents("scores.json", $newstr);
 }

@@ -232,6 +232,7 @@
 	document.addEventListener("keyup", keyupEventHandler);
 	inputField.addEventListener("focus", focusEventHandler);
 	inputField.addEventListener("blur", blurEventHandler);
+	gameport.addEventListener("click", function() { document.getElementById("hs-input").blur(); });
 
 	// Update high scores and generate a random high score name
 	loadScores();
@@ -624,6 +625,9 @@
 		gameTick = 0;
 		currDelay = 0;
 
+		// Re-load scores in case the async missed before
+		loadScores();
+
 		// Create a container for the parallax backgrounds
 		backgrounds = new PIXI.Container();
 		skyBack = new PIXI.Sprite(textures.skyBack);
@@ -746,7 +750,7 @@
 		}
 	}
 	function updateScores() {
-		if (highScores.length > 0) {
+		if (highScores) {
 
 			// Grab high scores div and display it
 			div = document.getElementById("high-scores");
@@ -765,10 +769,10 @@
 			// Add generate html to the div
 			div.innerHTML = output + "</ol>";
 		}
+		else document.getElementById("high-scores").innerHTML = "<h1>No high scores yet, tsk tsk."
 	}
 	function updateGameOver() {
 		if (++currDelay === GAME_OVER_DELAY) {
-			
 			restartable = true;
 			currText += "\n\n\nPress space or enter to play again\n\nPress escape to return to the main menu";
 		}
@@ -797,9 +801,7 @@
 	function spawnEnemy() {
 		var result;
 		var count = 0;
-		for (var prop in enemies.enemStats) 
-			if (Math.random() < 1/++count) 
-			result = prop;
+		for (var prop in enemies.enemStats) if (Math.random() < 1/++count) result = prop;
 
 		newEnem = new PIXI.extras.MovieClip(textures.enemies[result].idle);
 		newEnem.anchor.y = 1;
@@ -865,7 +867,8 @@
 	function postScore() {
 		var http = new XMLHttpRequest();
 		var url = "scores/submitScore.php";
-		var params = "name=" + document.getElementById("hs-input").value + "&score=" + finalScore;
+		var name = document.getElementById("hs-input").value.replace(/[^\w\s]/gi, '');
+		var params = "name=" + name + "&score=" + finalScore;
 		http.open("POST", url, true);
 
 		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -882,7 +885,6 @@
 	function keydownEventHandler(e) {
 
 		if (!focusedGame) return
-
 		keys[e.which] = true;
 
 		if (inMenu) {
