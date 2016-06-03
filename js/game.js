@@ -14,8 +14,8 @@
 	var COUNTDOWN_GAP = 60;
 	var ATTACK_TIME = 40;
 	var GAME_OVER_DELAY = 100;
-	var MUSIC_VOLUME = .2;
-	var SFX_VOLUME = .5;
+	var MUSIC_VOLUME = .1;
+	var SFX_VOLUME = .3;
 	var SPAWN_RATE_INCREASE = 0.06;
 	var GROUND_LEVEL = 3*GAME_HEIGHT/GAME_SCALE/4;
 
@@ -137,7 +137,7 @@
 				else this.punching = false;
 			}
 			else {
-				this.sprite.animationSpeed = this.dx/30 + .05;
+				this.sprite.animationSpeed = this.dx/15 + .05;
 			}
 			
 
@@ -184,7 +184,7 @@
 				"startY": GROUND_LEVEL
 			},
 			"enemy3": {
-				"dx": -0.1,
+				"dx": -0.2,
 				"dy": 0,
 				"jumpPower": 0,
 				"startX": GAME_WIDTH/GAME_SCALE,
@@ -217,7 +217,7 @@
 				if (((Math.abs(currSprite.position.x - player.sprite.position.x) * 2 < currSprite.width + player.sprite.width) && (Math.abs(currSprite.position.y - player.sprite.position.y) * 2 < currSprite.height + player.sprite.height)) && running) gameOver();
 
 				// Update textures
-				currSprite.animationSpeed = currStats.dx/30 + .05;
+				currSprite.animationSpeed = currStats.dx/20 + .05;
 
 				if (currSprite.position.x < -currSprite.width) this.sprites.splice(i,1);
 			}
@@ -306,17 +306,17 @@
 		};
 
 		// Loop through all frames of the enemy sprite
-		for (var i = 1; i < 12; i++) {
+		for (var i = 1; i < 20; i++) {
 
 			// Determine enemy who's sprite are being loaded
 			if (i <= 9) outCont = "enemy1";
-			else if (i <= 10) outCont = "enemy2";
-			else if (i <= 11) outCont = "enemy3";
+			else if (i <= 15) outCont = "enemy2";
+			else if (i <= 19) outCont = "enemy3";
 
 			// Determine which sprites are being loaded for each character
 			if (i <= 9) cont = "idle";
-			if (i <= 10) cont = "idle";
-			if (i <= 11) cont = "idle";
+			if (i <= 15) cont = "idle";
+			if (i <= 19) cont = "idle";
 			textures.enemies[outCont][cont].push(PIXI.Texture.fromFrame("enemies" + i + ".png"));
 		}
 
@@ -644,12 +644,18 @@
 		distantBack.height = 3*GAME_HEIGHT/GAME_SCALE/4;
 		backgrounds.addChild(distantBack);
 
+		console.log(distantBack.height);
+		console.log(textures.distantBack.height);
+
 		closeBack = new PIXI.Sprite(textures.closeBack);
 		closeBack.position.x = 0;
 		closeBack.position.y = 3*GAME_HEIGHT/GAME_SCALE/8;
 		closeBack.width = 2*GAME_WIDTH/GAME_SCALE;
 		closeBack.height = 3*GAME_HEIGHT/GAME_SCALE/8;
 		backgrounds.addChild(closeBack);
+
+		console.log(closeBack.height);
+		console.log(textures.closeBack.height);
 
 		floor = new PIXI.Sprite(textures.ground);
 		floor.position.x = 0;
@@ -827,9 +833,9 @@
 		finalScore = Math.round((5*punchOuts+3*distance)/2);
 
 		player.sprite.textures = textures.player.defeat;
+		for (var i = 0; i < enemies.sprites.length; i++) enemies.sprites[i].stop();
 		displayText("\n\n" + goTexts[Math.floor(Math.random()*goTexts.length)] + "\n\nYour final score, '" + finalScore + "', has been submitted", 0);
 		postScore();
-		// Add enemies 'defeat' textures here
 	}
 	function clearStage() {
 		while(stage.children[0]) {
