@@ -24,42 +24,41 @@
 	var currTextTime = 0;
 	var text;
 
+	// Objects used to store important game info
 	var textures = {};
 	var sounds = {};
 	var keys = {};
-
 	var highScores = {};
 
+	// Variables that holds all of the potential game over screen texts and starting names
+	var goTexts = ["Whelp, they got'cha", "Maybe try running next time...", "C'mon smalls, you can do better than that", "RIP"];
+	var startNames = ["Nameless Nancy", "NoName McGee", "Tike Myson", "Boxer 76"];
+
+	// Booleans used to indicate the various states the game could be in
 	var playing = false;
+	var intro = false;
+	var running = false;
 	var inMenu = true;
 	var atMainMenu = true;
 	var atGameOver = false;
 	var atOpt = false;
 	var restartable = false;
 	var focusedGame = true;
+	var musicEnabled = true;
+	var sfxEnabled = true;
 
-	var currState = 0;
-	var currOptState = 2;
+	// Initialize tracking variables
 	var currDelay = 0;
-	var currSong = Math.round(Math.random()*3)-1;
-
-	// Initial states for tracking variables
 	var distance = 0;
 	var punchOuts = 0;
 	var finalScore = 0;
 	var gameTick = 0;
-	var timeSinceSpawn = 0;
+	var currSong = Math.round(Math.random()*3)-1;
 	var spawnGap = 300;
-
-	var musicEnabled = true;
-	var sfxEnabled = true;
-
-	// Tracking variables to indicate whether a function is ran in the animate loop
-	var intro = false;
-	var running = false;
-
-	var pointer;
-	var menu;
+	
+	// Variables having to do with the state machines in use
+	var currState = 0;
+	var currOptState = 2;
 	var menuState = StateMachine.create({
 		initial: {state: "play", event: "init"},
 		error: function() {},
@@ -80,7 +79,6 @@
 			oncredits: function() { movePointer(3); currState = 3; },
 		}
 	});
-
 	var optMenuState = StateMachine.create({
 		initial: {state: "back", event: "init"},
 		error: function() {},
@@ -109,6 +107,7 @@
 	stage.scale.x = GAME_SCALE;
 	stage.scale.y = GAME_SCALE;
 
+	// Create the player object that has its own tracking variables and update function
 	var player = {
 		"sprite": null,
 		"dx": 0,
@@ -166,6 +165,7 @@
 		}
 	};
 
+	// Create the enemies object that has its own tracking variables and update function
 	var enemies = {
 		"sprites": [],
 		"enemStats": {
@@ -193,14 +193,15 @@
 		},
 		"update": function() {
 			for (var i = 0; i < this.sprites.length; i++) {
+
+				// Get current enemy stats and sprite
 				currSprite = this.sprites[i];
 				currStats = this.enemStats[currSprite.type];
-
 				if (!currSprite.dx) currSprite.dx = currStats.dx, currSprite.dy = currStats.dy;
 
+				// Adjust position of sprite accounting for world physics
 				currSprite.position.x -= player.dx - currSprite.dx;
 				currSprite.position.y += currSprite.dy;
-
 				if (currSprite.position.y > GROUND_LEVEL) currSprite.position.y = GROUND_LEVEL, currSprite.dy = -currStats.jumpPower;
 				currSprite.dy += GRAVITY;
 
@@ -223,12 +224,18 @@
 		}
 	};
 
-	// Update high scores
-	loadScores();
+	// Grab the high score name input field
+	var inputField = document.getElementById("hs-input");
 
 	// Add event listeners to the document
-	document.addEventListener('keydown', keydownEventHandler);
-	document.addEventListener('keyup', keyupEventHandler);
+	document.addEventListener("keydown", keydownEventHandler);
+	document.addEventListener("keyup", keyupEventHandler);
+	inputField.addEventListener("focus", focusEventHandler);
+	inputField.addEventListener("blur", blurEventHandler);
+
+	// Update high scores and generate a random high score name
+	loadScores();
+	inputField.value = startNames[Math.floor(Math.random()*startNames.length)];
 
 	// Create temporary loading text
 	ltext = new PIXI.Text("Loading ... edit high score name while you wait?",{font: "30px Arial", fill: "#fff"});
@@ -243,7 +250,7 @@
 	// Ensure scaling doesn't cause anti-aliasing
 	PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
 
-	// Only load world, tilesheet, and spritesheet
+	// Add all assets to the loader
 	PIXI.loader
 		.add("assets/spritesheet.json")
 		.add("fonts/athletic-stroke.fnt")
@@ -256,8 +263,12 @@
 		.add("audio/defeat.mp3")
 		.add("audio/woosh.mp3")
 		.add("audio/punch.mp3")
+		.add("audio/countdown1.mp3")
+		.add("audio/countdown2.mp3")
+		.add("audio/jump.mp3")
 		.load(ready);
 
+	// Kicks off main game preperation and set up
 	function ready() {
 		
 		// Initialize player texture object
@@ -308,17 +319,13 @@
 			textures.enemies[outCont][cont].push(PIXI.Texture.fromFrame("enemies" + i + ".png"));
 		}
 
-		textures["testBrown"] = PIXI.Texture.fromFrame("test-brown.png");
-		textures["testRed"] = PIXI.Texture.fromFrame("test-red.png");
-		textures["testGreen"] = PIXI.Texture.fromFrame("test-green.png");
-
+		// Load relevant game textures
+		textures["pointer"] = PIXI.Texture.fromFrame("pointer.png");
 		textures["mainMenu"] = PIXI.Texture.fromFrame("main-menu.png");
 		textures["skyBack"] = PIXI.Texture.fromFrame("sky-back.png");
 		textures["distantBack"] = PIXI.Texture.fromFrame("distant-back.png");
 		textures["closeBack"] = PIXI.Texture.fromFrame("close-back.png");
 		textures["ground"] = PIXI.Texture.fromFrame("ground.png");
-
-		textures["pointer"] = PIXI.Texture.fromFrame("pointer.png");
 
 		// Load music
 		sounds["music1"] = PIXI.audioManager.getAudio("audio/music1.mp3");
@@ -331,25 +338,33 @@
 		sounds["defeat"] = PIXI.audioManager.getAudio("audio/defeat.mp3");
 		sounds["woosh"] = PIXI.audioManager.getAudio("audio/woosh.mp3");
 		sounds["punch"] = PIXI.audioManager.getAudio("audio/punch.mp3");
+		sounds["countdown1"] = PIXI.audioManager.getAudio("audio/countdown1.mp3");
+		sounds["countdown2"] = PIXI.audioManager.getAudio("audio/countdown2.mp3");
+		sounds["jump"] = PIXI.audioManager.getAudio("audio/jump.mp3");
 
 		// Adjust volumes
 		sounds.music1.volume = MUSIC_VOLUME;
 		sounds.music2.volume = MUSIC_VOLUME;
 		sounds.music3.volume = MUSIC_VOLUME;
-		sounds.thump.volume = SFX_VOLUME - .1;
+		sounds.thump.volume = SFX_VOLUME - .2;
 		sounds.success.volume = SFX_VOLUME;
 		sounds.defeat.volume = SFX_VOLUME;
+		sounds.countdown1.volume = SFX_VOLUME;
+		sounds.countdown2.volume = SFX_VOLUME;
+		sounds.jump.volume = SFX_VOLUME;
 
+		// Start the player off at the main menu and begin main game loop
 		loadMainMenu(true);
-		loadScores();
 		animate();
 	}
 
-	// Function used to load and initialize the starting menu
+	// Function used to create and display the starting menu
 	function loadMainMenu(first) {
 
+		// Do not play change screen noise if the player has just started the game
 		if (first != true) playSound("success");
 		
+		// Reset game state variables and wipe the screen
 		clearStage();
 		inMenu = true;
 		atMainMenu = true;
@@ -357,8 +372,8 @@
 		atOpt = false;
 		restartable = false;
 
+		// Create main menu
 		menu = new PIXI.Container();
-
 		background = new PIXI.Sprite(textures.mainMenu);
 		background.width = GAME_WIDTH/GAME_SCALE;
 		background.height = GAME_HEIGHT/GAME_SCALE;
@@ -411,7 +426,6 @@
 		pointer.position.x = menu.getChildAt(currState+2).position.x - pointer.width - 10;
 		pointer.position.y = menu.getChildAt(currState+2).position.y;
 		menu.addChild(pointer);
-
 		stage.addChild(menu);
 	}
 
@@ -437,23 +451,23 @@
 
 	// Function responsible for changing the location of the pointer, called by state machine
 	function movePointer(index) {
-
 		playSound("thump");
-
 		elem = menu.getChildAt(index+2);
 		createjs.Tween.removeTweens(pointer.position);
 		createjs.Tween.get(pointer.position).to({y: elem.position.y, x: elem.position.x - pointer.width - 10}, 500, createjs.Ease.cubicOut);
 	}
 
+	// Function to create and display the instructions menu screen
 	function loadInstructions() {
 
 		playSound("success");
 
+		// Reset game state variables and wipe the screen
 		clearStage();
 		atMainMenu = false;
 
+		// Create instructions menu
 		menu = new PIXI.Container();
-
 		background = new PIXI.Sprite(textures.mainMenu);
 		background.width = GAME_WIDTH/GAME_SCALE;
 		background.height = GAME_HEIGHT/GAME_SCALE;
@@ -486,20 +500,21 @@
 		pointer.position.x = back.position.x - pointer.width - 10;
 		pointer.position.y = back.position.y;
 		menu.addChild(pointer);
-
 		stage.addChild(menu);
 	}
 
+	// Function to create and display the options menu screen
 	function loadOptions() {
 
 		playSound("success");
 
+		// Reset game state variables and wipe the screen
 		clearStage();
 		atMainMenu = false;
 		atOpt = true;
 
+		// Create options menu
 		menu = new PIXI.Container();
-
 		background = new PIXI.Sprite(textures.mainMenu);
 		background.width = GAME_WIDTH/GAME_SCALE;
 		background.height = GAME_HEIGHT/GAME_SCALE;
@@ -543,19 +558,20 @@
 		pointer.position.x = menu.getChildAt(currOptState+2).position.x - pointer.width - 10;
 		pointer.position.y = menu.getChildAt(currOptState+2).position.y;
 		menu.addChild(pointer);
-
 		stage.addChild(menu);
 	}
 
+	// Function to create and display the credits menu screen
 	function loadCredits() {
 
 		playSound("success");
 
+		// Reset game state variables and wipe the screen
 		clearStage();
 		atMainMenu = false;
 
+		// Create credits menu
 		menu = new PIXI.Container();
-
 		background = new PIXI.Sprite(textures.mainMenu);
 		background.width = GAME_WIDTH/GAME_SCALE;
 		background.height = GAME_HEIGHT/GAME_SCALE;
@@ -588,29 +604,28 @@
 		pointer.position.x = back.position.x - pointer.width - 10;
 		pointer.position.y = back.position.y;
 		menu.addChild(pointer);
-
 		stage.addChild(menu);
 	}
 
+	// Function that creates the game screen and starts the game
 	function startGame() {
 
-		playSound("success");
-
+		// Reset game state variables and wipe the screen
 		clearStage();
 		inMenu = false;
 		atMainMenu = false;
 		atGameOver = false;
 		playing = true;
 		restartable = false;
+		intro = true;
 		punchOuts = 0;
 		distance = 0;
 		finalScore = 0;
 		gameTick = 0;
-		timeSinceSpawn = 0;
 		currDelay = 0;
 
+		// Create a container for the parallax backgrounds
 		backgrounds = new PIXI.Container();
-
 		skyBack = new PIXI.Sprite(textures.skyBack);
 		skyBack.position.x = 0;
 		skyBack.position.y = 0;
@@ -678,34 +693,21 @@
 		text.scale.y = 1/GAME_SCALE;
 		text.alpha = 0;
 		stage.addChild(text);
-
-		intro = true;
-		
 	}
 
+	/* BEGIN functions that have to do with updating game states */
 	function updateIntro() {
-		if (gameTick === 0) displayText("3", COUNTDOWN_GAP);
-		if (gameTick === COUNTDOWN_GAP) displayText("2", COUNTDOWN_GAP);
-		if (gameTick === 2*COUNTDOWN_GAP) displayText("1", COUNTDOWN_GAP);
+		if (gameTick === 0) displayText("3", COUNTDOWN_GAP), playSound("countdown1");
+		if (gameTick === COUNTDOWN_GAP) displayText("2", COUNTDOWN_GAP), playSound("countdown1");
+		if (gameTick === 2*COUNTDOWN_GAP) displayText("1", COUNTDOWN_GAP), playSound("countdown1");
 		if (gameTick === 3*COUNTDOWN_GAP) {
 			displayText("Go", COUNTDOWN_GAP);
+			playSound("countdown2");
 			running = true;
 			intro = false;
 			gameTick = 0;
 		}
 	}
-
-	function displayText(words, time) {
-		text.alpha = 1;
-		currText = words;
-		if (time > 0) {
-			currTextTime = time;
-			createjs.Tween.removeTweens(text);
-			createjs.Tween.get(text).to({alpha: 0}, 1000*time/60, createjs.Ease.quintIn);
-		}
-		else currTextTime = -1;
-	}
-
 	function updateText() {
 		if (--currTextTime === 0 || currText === "") {
 			currText = "";
@@ -716,7 +718,6 @@
 		text.position.x = (GAME_WIDTH/GAME_SCALE-text.width)/2;
 		text.position.y = 20;
 	}
-
 	function updateBackgrounds() {
 		sb = backgrounds.getChildAt(0);
 		db = backgrounds.getChildAt(1);
@@ -733,27 +734,18 @@
 		if (Math.abs(cb.position.x) >= cb.width/2) cb.position.x = 0;
 		if (Math.abs(f.position.x) >= f.width/2) f.position.x = 0;
 	}
-
-	function updateProgress() {
+	function updateGameState() {
 		distanceText.text = "Distance: " + Math.floor(distance) + " ft";
 		punchText.text = "Punch-outs: " + Math.floor(punchOuts);
-	}
 
-	function updateGameState() {
-
-		// Function responsible for scaling up the player's speed
-		player.dx = Math.sqrt(gameTick)/18 + 0.1;
-
+		player.dx = Math.sqrt(gameTick)/18 + 0.1; // Function responsible for scaling up the player's speed
 
 		if (gameTick % Math.floor(spawnGap) === 0) {
 			spawnEnemy();
 			spawnGap /= 1 + Math.random()*SPAWN_RATE_INCREASE;
 		}
 	}
-
 	function updateScores() {
-
-		// If there exists any high scores
 		if (highScores.length > 0) {
 
 			// Grab high scores div and display it
@@ -774,7 +766,6 @@
 			div.innerHTML = output + "</ol>";
 		}
 	}
-
 	function updateGameOver() {
 		if (++currDelay === GAME_OVER_DELAY) {
 			
@@ -782,7 +773,6 @@
 			currText += "\n\n\nPress space or enter to play again\n\nPress escape to return to the main menu";
 		}
 	}
-
 	function updateMusic() {
 		if (!sounds.music1.playing && !sounds.music2.playing && !sounds.music3.playing) {
 			currSong = (currSong+1)%3;
@@ -791,11 +781,20 @@
 			else sounds.music3.play();
 		}
 	}
+	/* END functions that have to do with updating game states */
 
+	/* BEGIN functions that have to do with doing completing distinct, finite processes */
+	function displayText(words, time) {
+		text.alpha = 1;
+		currText = words;
+		if (time > 0) {
+			currTextTime = time;
+			createjs.Tween.removeTweens(text);
+			createjs.Tween.get(text).to({alpha: 0}, 1000*time/60, createjs.Ease.quintIn);
+		}
+		else currTextTime = -1;
+	}
 	function spawnEnemy() {
-
-		timeSinceSpawn = 0;
-
 		var result;
 		var count = 0;
 		for (var prop in enemies.enemStats) 
@@ -811,7 +810,6 @@
 		enemies.sprites.push(newEnem);
 		enemyCont.addChild(newEnem);
 	}
-
 	function gameOver() {
 
 		playSound("defeat");
@@ -823,39 +821,33 @@
 		player.dx = 0;
 		player.dy = 0;
 		gameTick = 0;
-		timeSinceSpawn = 0;
 
 		finalScore = Math.round((5*punchOuts+3*distance)/2);
 
 		player.sprite.textures = textures.player.defeat;
-		displayText("\n\nWhelp, they got'cha\n\nYour final score, '" + finalScore + "', has been submitted", 0);
+		displayText("\n\n" + goTexts[Math.floor(Math.random()*goTexts.length)] + "\n\nYour final score, '" + finalScore + "', has been submitted", 0);
 		postScore();
 		// Add enemies 'defeat' textures here
 	}
-
 	function clearStage() {
 		while(stage.children[0]) {
 			stage.removeChild(stage.children[0]);
 		}
 	}
-
 	function playSound(name) {
 		if (sfxEnabled) {
 			sounds[name].stop();
 			sounds[name].play();
 		}
 	}
-
 	function toggleMusic() {
 		musicEnabled = !musicEnabled;
 		option1.text = (musicEnabled) ? "Music: On" : "Music: Off";
 	}
-
 	function toggleSFX() {
 		sfxEnabled = !sfxEnabled;
 		option2.text = (sfxEnabled) ? "SFX: On" : "SFX: Off";
 	}
-
 	function loadScores() {
 		var xhr = new XMLHttpRequest();
 		xhr.open("get", "scores/scores.json", true);
@@ -870,7 +862,6 @@
 		};
 		xhr.send();
 	}
-
 	function postScore() {
 		var http = new XMLHttpRequest();
 		var url = "scores/submitScore.php";
@@ -885,8 +876,9 @@
 		}
 		http.send(params);
 	}
+	/* END functions that have to do with doing completing distinct, finite processes */
 
-	// Event Handlers
+	/* BEGIN event handler functions */
 	function keydownEventHandler(e) {
 
 		if (!focusedGame) return
@@ -912,7 +904,10 @@
 			}
 		}
 		else {
-			if ((e.which === 32 || e.which === 87 || e.which === 38) && !player.inAir()) player.dy = -player.jumpPower;
+			if ((e.which === 32 || e.which === 87 || e.which === 38) && !player.inAir()) {
+				playSound("jump");
+				player.dy = -player.jumpPower;
+			}
 			if (e.which === 13 && !player.isAttacking() && running) {
 				playSound("woosh");
 				player.attackTime = ATTACK_TIME;
@@ -941,37 +936,42 @@
 	function keyupEventHandler(e) {
 		keys[e.which] = false;
 	}
-	function disableFocus(e) {
+	function focusEventHandler(e) {
 		focusedGame = false;
 		document.getElementById("hs-input").select();
 	}
-	function enableFocus(e) {
+	function blurEventHandler(e) {
 		focusedGame = true;
 	}
+	/* END event handler functions */
 
 	// Main game loop!
 	function animate() {
 		requestAnimationFrame(animate);
 
+		// Deal with music changing
 		if (musicEnabled) updateMusic();
 		else sounds.music1.stop(), sounds.music2.stop(), sounds.music3.stop();
 
+		// If there exists text, handle displaying it
 		if (currText != "") updateText();
+
+		// If the player is at the gameover screen, handle it
 		if (atGameOver) updateGameOver();
+
+		// If the user is playing
 		if (playing) {
 			
-			if (intro) {updateIntro();}
-			if (running) {
-				updateGameState();
-				updateProgress();
-			}
-			
+			if (intro) updateIntro();
+			if (running) updateGameState();
+
+			// Call individual player updates
 			updateBackgrounds();
 			player.update();
 			enemies.update();
 
-			distance += player.dx/DISTANCE_DIVISOR;
-			++gameTick, ++timeSinceSpawn;
+			// Increment tracking variables
+			distance += player.dx/DISTANCE_DIVISOR, ++gameTick;
 		}
 
 		renderer.render(stage);

@@ -1,1 +1,4 @@
 # cs413 Project 4
+"So, [insert your name here], you thought you could screw Tony and get away with it, eh? Well if I ain't gettin' my money, there's only one thing I've gotta let you know, revenge is a dish that tastes best when served cold, and tonight, you're my dish, capisce?"
+
+And like the beginning of any mob drama, you now find yourself running as fast as you can to escape Tony and his cronies of men who really wanted you to throw that boxing match you just finished. Luckily for you, you're armed with your two deadliest weapons; your boxing gloves. Unfortunately, it takes more than a cheesy one-liner to punch through hordes of mobsters, so get to it
