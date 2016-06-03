@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>4</int>
         <key>texturePackerVersion</key>
-        <string>4.2.1</string>
+        <string>4.2.2</string>
         <key>fileName</key>
         <string>Y:/cs413/projects/cs413-project4/assets/spritesheet.tps</string>
         <key>autoSDSettings</key>
@@ -74,7 +74,7 @@
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
-        <uint>1</uint>
+        <uint>0</uint>
         <key>webpQualityLevel</key>
         <uint>101</uint>
         <key>textureSubPath</key>
@@ -100,7 +100,7 @@
         <key>algorithmSettings</key>
         <struct type="AlgorithmSettings">
             <key>algorithm</key>
-            <enum type="AlgorithmSettings::AlgorithmId">MaxRects</enum>
+            <enum type="AlgorithmSettings::AlgorithmId">Basic</enum>
             <key>freeSizeMode</key>
             <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Best</enum>
             <key>sizeConstraints</key>
@@ -158,7 +158,7 @@
             <string></string>
         </struct>
         <key>autoAliasEnabled</key>
-        <true/>
+        <false/>
         <key>trimSpriteNames</key>
         <false/>
         <key>prependSmartFolderName</key>
@@ -170,13 +170,13 @@
             <key>scaleMode</key>
             <enum type="ScaleMode">Smooth</enum>
             <key>extrude</key>
-            <uint>1</uint>
+            <uint>0</uint>
             <key>trimThreshold</key>
             <uint>1</uint>
             <key>trimMargin</key>
             <uint>1</uint>
             <key>trimMode</key>
-            <enum type="SpriteSettings::TrimMode">Trim</enum>
+            <enum type="SpriteSettings::TrimMode">None</enum>
             <key>tracerTolerance</key>
             <int>200</int>
             <key>heuristicMask</key>
@@ -195,8 +195,30 @@
             <key type="filename">ground.png</key>
             <key type="filename">player1.png</key>
             <key type="filename">player10.png</key>
+            <key type="filename">player11.png</key>
+            <key type="filename">player12.png</key>
+            <key type="filename">player13.png</key>
+            <key type="filename">player14.png</key>
+            <key type="filename">player15.png</key>
+            <key type="filename">player16.png</key>
+            <key type="filename">player17.png</key>
+            <key type="filename">player18.png</key>
+            <key type="filename">player19.png</key>
             <key type="filename">player2.png</key>
+            <key type="filename">player20.png</key>
+            <key type="filename">player21.png</key>
+            <key type="filename">player22.png</key>
+            <key type="filename">player23.png</key>
+            <key type="filename">player24.png</key>
+            <key type="filename">player25.png</key>
+            <key type="filename">player26.png</key>
+            <key type="filename">player27.png</key>
+            <key type="filename">player28.png</key>
+            <key type="filename">player29.png</key>
             <key type="filename">player3.png</key>
+            <key type="filename">player30.png</key>
+            <key type="filename">player31.png</key>
+            <key type="filename">player32.png</key>
             <key type="filename">player4.png</key>
             <key type="filename">player5.png</key>
             <key type="filename">player6.png</key>
@@ -220,21 +242,43 @@
             <filename>player4.png</filename>
             <filename>player5.png</filename>
             <filename>player2.png</filename>
+            <filename>enemies1.png</filename>
+            <filename>enemies2.png</filename>
+            <filename>test-red.png</filename>
+            <filename>test-brown.png</filename>
+            <filename>test-green.png</filename>
+            <filename>close-back.png</filename>
+            <filename>distant-back.png</filename>
+            <filename>sky-back.png</filename>
             <filename>player6.png</filename>
             <filename>player7.png</filename>
             <filename>player8.png</filename>
             <filename>player9.png</filename>
-            <filename>pointer.png</filename>
-            <filename>sky-back.png</filename>
-            <filename>test-brown.png</filename>
-            <filename>test-green.png</filename>
-            <filename>test-red.png</filename>
-            <filename>close-back.png</filename>
-            <filename>distant-back.png</filename>
-            <filename>enemies1.png</filename>
-            <filename>enemies2.png</filename>
             <filename>ground.png</filename>
             <filename>player10.png</filename>
+            <filename>pointer.png</filename>
+            <filename>player11.png</filename>
+            <filename>player12.png</filename>
+            <filename>player13.png</filename>
+            <filename>player14.png</filename>
+            <filename>player15.png</filename>
+            <filename>player16.png</filename>
+            <filename>player17.png</filename>
+            <filename>player18.png</filename>
+            <filename>player19.png</filename>
+            <filename>player20.png</filename>
+            <filename>player21.png</filename>
+            <filename>player22.png</filename>
+            <filename>player23.png</filename>
+            <filename>player24.png</filename>
+            <filename>player25.png</filename>
+            <filename>player26.png</filename>
+            <filename>player27.png</filename>
+            <filename>player28.png</filename>
+            <filename>player29.png</filename>
+            <filename>player30.png</filename>
+            <filename>player31.png</filename>
+            <filename>player32.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

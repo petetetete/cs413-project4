@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>A Slimey Adventure</title>
+	<title>Punch Line</title>
+	<link rel="icon" type="image/png" href="favicon.ico">
 	<style>
 		@font-face {
 			font-family: Athletic;
@@ -36,8 +37,26 @@
 			-moz-box-sizing: border-box;
 			box-sizing: border-box;
 		}
-		#high-scores {
-			
+		#hs-label {
+			font-family: Athletic;
+			font-size: 1.3em;
+			float: left;
+			width: 25%;
+			line-height: 2;
+			margin-top: 2px;
+			padding: 5px;
+		}
+		#hs-input {
+			font-size: 1.1em;
+			float: right;
+			width: 74%;
+			line-height: 2;
+			margin-top: 1px;
+			padding: 5px;
+
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
 		}
 		#high-scores ol {
 			margin: 5px 30px 10px 0;
@@ -51,10 +70,17 @@
 </head>
 <body>
 	<div style="width:80%;margin:0 auto;max-width:1044px;text-align:center;">
-		<div class="material">
-			<h1>A Slimey Adventure</h1>
+		<div class="material" id="game-material">
+			<h1>Punch Line</h1>
 			<div id="gameport" style="margin:0 auto"></div>
 		</div>
+
+		<div class="material">
+			<div id="hs-label">Change high score name</div>
+			<input id="hs-input" type="text" title="Change your high score name" value="Nameless Baller" maxlength="30" onfocus="this.select;disableFocus()" onblur="enableFocus()" />
+			<div style="clear:both;"></div>
+		</div>
+
 
 		<div id="high-scores" class="material">
 			<h1>Loading High Scores...</h1>
@@ -63,6 +89,21 @@
 		<div class="material">
 			<h1>Instructions</h1>
 
+			<p>"So, [insert your name here], you thought you could screw Tony and get away with it, eh? Well if I ain't gettin' my money, there's only one thing I've gotta let you know, revenge is a dish that tastes best when served cold, and tonight, you're my dish, capisce?"</p>
+
+			<table align="center">
+				<tr>
+					<td><b>W</b>, <b>&#8593;</b> or <b>Space</b> - Jump</td>
+				</tr>
+				<tr>
+					<td><b>Enter</b> - Punch</td>
+				</tr>
+				<tr>
+					<td><b>Escape</b> - Pause game</td>
+				</tr>
+			</table>
+
+			<p>And like the beginning of any mob drama, you now find yourself running as fast as you can to escape Tony and his cronies of men who really wanted you to throw that boxing match you just finished. Luckily for you, you're armed with your two deadliest weapons; your boxing gloves. Unfortunately, it takes more than a cheesy one-liner to punch through hordes of mobsters, so get to it!</p>
 		</div>
 
 		<div class="material">
