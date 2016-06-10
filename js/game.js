@@ -233,10 +233,12 @@
 	inputField.addEventListener("focus", focusEventHandler);
 	inputField.addEventListener("blur", blurEventHandler);
 	gameport.addEventListener("click", function() { document.getElementById("hs-input").blur(); });
+	window.addEventListener("beforeunload", function() { saveOptions(); });
 
 	// Update high scores and generate a random high score name
 	loadScores();
 	inputField.value = startNames[Math.floor(Math.random()*startNames.length)];
+	fetchOptions();
 
 	// Create temporary loading text
 	ltext = new PIXI.Text("Loading ... edit high score name while you wait?",{font: "30px Arial", fill: "#fff"});
@@ -347,9 +349,11 @@
 		sounds.music1.volume = MUSIC_VOLUME;
 		sounds.music2.volume = MUSIC_VOLUME;
 		sounds.music3.volume = MUSIC_VOLUME;
-		sounds.thump.volume = SFX_VOLUME - .3;
+		sounds.thump.volume = SFX_VOLUME;
 		sounds.success.volume = SFX_VOLUME;
 		sounds.defeat.volume = SFX_VOLUME;
+		sounds.woosh.volume = SFX_VOLUME;
+		sounds.punch.volume = SFX_VOLUME - .2;
 		sounds.countdown1.volume = SFX_VOLUME;
 		sounds.countdown2.volume = SFX_VOLUME;
 		sounds.jump.volume = SFX_VOLUME;
@@ -624,6 +628,7 @@
 		finalScore = 0;
 		gameTick = 0;
 		currDelay = 0;
+		spawnGap = 300;
 
 		// Re-load scores in case the async missed before
 		loadScores();
@@ -885,6 +890,24 @@
 		}
 		http.send(params);
 	}
+	function saveOptions() {
+		name = document.getElementById("hs-input").value.replace(/[^\w\s]/gi, '');
+		name = (startNames.indexOf(name) > -1) ? "" : name;
+		settings = {
+			"music": musicEnabled,
+			"sfx": sfxEnabled,
+			"hsName": name,
+		}
+		localStorage.setItem("settings", JSON.stringify(settings));
+	}
+	function fetchOptions() {
+		if (localStorage.settings) {
+			settings = JSON.parse(localStorage.settings);
+			musicEnabled = settings.music;
+			sfxEnabled = settings.sfx;
+			document.getElementById("hs-input").value = (settings.hsName) ? settings.hsName : startNames[Math.floor(Math.random()*startNames.length)];
+		}
+	}
 	/* END functions that have to do with doing completing distinct, finite processes */
 
 	/* BEGIN event handler functions */
@@ -946,7 +969,8 @@
 	}
 	function focusEventHandler(e) {
 		focusedGame = false;
-		document.getElementById("hs-input").select();
+		input = document.getElementById("hs-input");
+		if (startNames.indexOf(input.value) > -1) input.select();
 	}
 	function blurEventHandler(e) {
 		focusedGame = true;
